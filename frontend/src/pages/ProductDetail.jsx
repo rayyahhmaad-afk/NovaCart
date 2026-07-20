@@ -31,11 +31,14 @@ export default function ProductDetail() {
             return;
         }
         setAdding(true);
-        // Simulasi add to cart API
-        setTimeout(() => {
+        try {
+            await api.post('/cart', { product_id: product.id, quantity: 1 });
             alert('Berhasil ditambahkan ke keranjang!');
+        } catch (error) {
+            alert(error.response?.data?.message || 'Gagal menambahkan ke keranjang');
+        } finally {
             setAdding(false);
-        }, 600);
+        }
     };
 
     if (loading) {
@@ -143,6 +146,38 @@ export default function ProductDetail() {
                         </button>
                     </div>
                 </div>
+            </div>
+
+            {/* Reviews Section */}
+            <div className="mt-12 bg-white p-6 md:p-10 rounded-[2rem] shadow-sm border border-gray-100">
+                <h3 className="text-2xl font-black text-gray-900 mb-8 border-b pb-4">Ulasan Pembeli</h3>
+                {product.reviews && product.reviews.length > 0 ? (
+                    <div className="space-y-6">
+                        {product.reviews.map(review => (
+                            <div key={review.id} className="pb-6 border-b border-gray-100 last:border-0">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center font-bold text-gray-500">
+                                        {review.user?.name?.charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-gray-800">{review.user?.name}</p>
+                                        <div className="flex text-yellow-400">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star key={i} size={14} className={i < review.rating ? 'fill-current' : 'text-gray-200'} />
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <span className="ml-auto text-xs text-gray-400">
+                                        {new Date(review.created_at).toLocaleDateString('id-ID')}
+                                    </span>
+                                </div>
+                                {review.comment && <p className="text-gray-600 mt-2">{review.comment}</p>}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <p className="text-gray-500 text-center py-8">Belum ada ulasan untuk produk ini.</p>
+                )}
             </div>
         </div>
     );

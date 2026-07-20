@@ -38,18 +38,18 @@ export default function Register() {
                 {error && <div className="bg-red-100 text-red-600 p-3 rounded mb-4 text-sm">{error}</div>}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Nama Lengkap</label>
-                        <input type="text" required value={name} onChange={e => setName(e.target.value)}
+                        <label htmlFor="reg-name" className="block text-sm font-medium text-gray-700">Nama Lengkap</label>
+                        <input id="reg-name" type="text" required value={name} onChange={e => setName(e.target.value)}
                             className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-200" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Email atau No HP</label>
-                        <input type="text" required value={contact} onChange={e => setContact(e.target.value)}
+                        <label htmlFor="reg-contact" className="block text-sm font-medium text-gray-700">Email atau No HP</label>
+                        <input id="reg-contact" type="text" required value={contact} onChange={e => setContact(e.target.value)}
                             className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-200" />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" required value={password} minLength={6} onChange={e => setPassword(e.target.value)}
+                        <label htmlFor="reg-password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <input id="reg-password" type="password" required value={password} minLength={6} onChange={e => setPassword(e.target.value)}
                             className="mt-1 w-full p-2 border border-gray-300 rounded focus:ring focus:ring-blue-200" />
                     </div>
                     <button type="submit" className="w-full bg-blue-600 text-white font-semibold py-2 rounded hover:bg-blue-700 transition">

@@ -5,7 +5,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Catalog from './pages/Catalog';
 import ProductDetail from './pages/ProductDetail';
-import { ShoppingCart, LogOut, User } from 'lucide-react';
+import Cart from './pages/Cart';
+import Checkout from './pages/Checkout';
+import OrderSuccess from './pages/OrderSuccess';
+import OrderHistory from './pages/OrderHistory';
+import AdminPanel from './pages/AdminPanel';
+import { ShoppingCart, LogOut, User, LayoutDashboard } from 'lucide-react';
 
 function Navbar() {
     const { user, logout } = useAuth();
@@ -19,9 +24,14 @@ function Navbar() {
                             <ShoppingCart size={22} /> <span className="hidden sm:inline">Keranjang</span>
                         </Link>
                         <div className="flex items-center gap-4 border-l pl-6 border-gray-200">
-                            <span className="text-gray-800 font-bold flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                            {user.role === 'admin' && (
+                                <Link to="/admin" className="text-white font-bold flex items-center gap-2 bg-red-600 hover:bg-red-700 transition px-3 py-1.5 rounded-lg shadow-sm">
+                                    <LayoutDashboard size={18} /> Admin
+                                </Link>
+                            )}
+                            <Link to="/orders" className="text-gray-800 font-bold flex items-center gap-2 bg-gray-50 hover:bg-gray-100 transition px-3 py-1.5 rounded-lg border border-gray-100">
                                 <User size={18} className="text-gray-500"/> {user.name}
-                            </span>
+                            </Link>
                             <button onClick={logout} className="text-sm bg-red-50 hover:bg-red-100 text-red-600 font-bold p-2.5 rounded-xl transition shadow-sm" title="Logout">
                                 <LogOut size={18} />
                             </button>
@@ -38,32 +48,25 @@ function Navbar() {
     );
 }
 
-function Cart() {
-    return (
-        <div className="max-w-4xl mx-auto p-12 text-center mt-10 bg-white rounded-3xl shadow-sm border border-gray-100">
-            <h1 className="text-3xl font-black text-gray-800 mb-4">Keranjang Belanja</h1>
-            <p className="text-gray-500 font-medium">(Protected Route) Keranjang Anda masih kosong.</p>
-        </div>
-    );
-}
-
 export default function App() {
     return (
         <AuthProvider>
             <Router>
-                <div className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans">
+                <div className="min-h-screen bg-[#F8F9FA] text-gray-900 font-sans flex flex-col">
                     <Navbar />
-                    <Routes>
-                        <Route path="/" element={<Catalog />} />
-                        <Route path="/product/:slug" element={<ProductDetail />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/cart" element={
-                            <ProtectedRoute>
-                                <Cart />
-                            </ProtectedRoute>
-                        } />
-                    </Routes>
+                    <div className="flex-1">
+                        <Routes>
+                            <Route path="/" element={<Catalog />} />
+                            <Route path="/product/:slug" element={<ProductDetail />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+                            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                            <Route path="/orders" element={<ProtectedRoute><OrderHistory /></ProtectedRoute>} />
+                            <Route path="/admin" element={<ProtectedRoute><AdminPanel /></ProtectedRoute>} />
+                            <Route path="/order-success/:id" element={<ProtectedRoute><OrderSuccess /></ProtectedRoute>} />
+                        </Routes>
+                    </div>
                 </div>
             </Router>
         </AuthProvider>

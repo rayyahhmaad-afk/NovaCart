@@ -47,8 +47,8 @@ export default function Catalog() {
                 </div>
                 
                 <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Kategori</label>
-                    <select value={category} onChange={e => setCategory(e.target.value)} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition text-sm">
+                    <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-3">Kategori</label>
+                    <select id="category" value={category} onChange={e => setCategory(e.target.value)} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition text-sm">
                         <option value="">Semua Kategori</option>
                         <option value="smartphone">Smartphone</option>
                         <option value="laptop">Laptop</option>
@@ -59,22 +59,22 @@ export default function Catalog() {
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Rentang Harga</label>
-                    <div className="flex flex-col gap-3">
+                    <label className="block text-sm font-semibold text-gray-700 mb-3" id="price-range-label">Rentang Harga</label>
+                    <div className="flex flex-col gap-3" aria-labelledby="price-range-label">
                         <div className="relative">
                             <span className="absolute left-3 top-2.5 text-gray-400 text-sm">Rp</span>
-                            <input type="number" placeholder="Min" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" />
+                            <input aria-label="Harga Minimum" type="number" placeholder="Min" value={minPrice} onChange={e => setMinPrice(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" />
                         </div>
                         <div className="relative">
                             <span className="absolute left-3 top-2.5 text-gray-400 text-sm">Rp</span>
-                            <input type="number" placeholder="Max" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" />
+                            <input aria-label="Harga Maksimum" type="number" placeholder="Max" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition" />
                         </div>
                     </div>
                 </div>
 
                 <div className="mb-2">
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Urutkan</label>
-                    <select value={sort} onChange={e => setSort(e.target.value)} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition text-sm">
+                    <label htmlFor="sort" className="block text-sm font-semibold text-gray-700 mb-3">Urutkan</label>
+                    <select id="sort" value={sort} onChange={e => setSort(e.target.value)} className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition text-sm">
                         <option value="newest">Terbaru</option>
                         <option value="price_asc">Harga Termurah</option>
                         <option value="price_desc">Harga Termahal</option>
@@ -88,6 +88,7 @@ export default function Catalog() {
                 <div className="relative mb-8">
                     <Search className="absolute left-4 top-3.5 text-gray-400" size={22} />
                     <input 
+                        aria-label="Cari produk"
                         type="text" 
                         placeholder="Cari nama produk, brand..." 
                         value={search}
