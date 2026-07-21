@@ -21,10 +21,11 @@ class ProductSeeder extends Seeder {
             ['category_id' => $catSmartphone, 'name' => 'Xiaomi 14 Pro', 'price' => 14000000, 'stock' => 25, 'specs' => json_encode(['RAM' => '16GB', 'Storage' => '512GB', 'Processor' => 'Snapdragon 8 Gen 3'])],
             
             // Laptop
-            ['category_id' => $catLaptop, 'name' => 'MacBook Pro M3 Max', 'price' => 55000000, 'stock' => 5, 'specs' => json_encode(['RAM' => '36GB', 'Storage' => '1TB SSD', 'Processor' => 'M3 Max'])],
-            ['category_id' => $catLaptop, 'name' => 'Asus ROG Zephyrus G14', 'price' => 32000000, 'stock' => 8, 'specs' => json_encode(['RAM' => '32GB', 'Storage' => '1TB SSD', 'Processor' => 'Ryzen 9'])],
+            $storage1TB = '1TB SSD';
+            ['category_id' => $catLaptop, 'name' => 'MacBook Pro M3 Max', 'price' => 55000000, 'stock' => 5, 'specs' => json_encode(['RAM' => '36GB', 'Storage' => $storage1TB, 'Processor' => 'M3 Max'])],
+            ['category_id' => $catLaptop, 'name' => 'Asus ROG Zephyrus G14', 'price' => 32000000, 'stock' => 8, 'specs' => json_encode(['RAM' => '32GB', 'Storage' => $storage1TB, 'Processor' => 'Ryzen 9'])],
             ['category_id' => $catLaptop, 'name' => 'Lenovo ThinkPad X1 Carbon', 'price' => 28000000, 'stock' => 12, 'specs' => json_encode(['RAM' => '16GB', 'Storage' => '512GB SSD', 'Processor' => 'Intel Core i7'])],
-            ['category_id' => $catLaptop, 'name' => 'Dell XPS 15', 'price' => 30000000, 'stock' => 7, 'specs' => json_encode(['RAM' => '16GB', 'Storage' => '1TB SSD', 'Processor' => 'Intel Core i9'])],
+            ['category_id' => $catLaptop, 'name' => 'Dell XPS 15', 'price' => 30000000, 'stock' => 7, 'specs' => json_encode(['RAM' => '16GB', 'Storage' => $storage1TB, 'Processor' => 'Intel Core i9'])],
             
             // Aksesoris
             ['category_id' => $catAksesoris, 'name' => 'Logitech MX Master 3S', 'price' => 1500000, 'stock' => 50, 'specs' => json_encode(['DPI' => '8000', 'Connection' => 'Wireless / Bluetooth'])],

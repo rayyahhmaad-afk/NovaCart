@@ -25,6 +25,12 @@ export default function ProductDetail() {
         fetchProduct();
     }, [slug]);
 
+    const getButtonText = () => {
+        if (product?.stock === 0) return 'Stok Habis';
+        if (adding) return 'Menambahkan...';
+        return 'Tambah ke Keranjang';
+    };
+
     const addToCart = async () => {
         if (!user) {
             alert("Harap login terlebih dahulu.");
@@ -100,7 +106,7 @@ export default function ProductDetail() {
                         {product.reviews_avg_rating ? (
                             <div className="flex items-center text-yellow-500 bg-yellow-50 px-3 py-1.5 rounded-lg border border-yellow-100">
                                 <Star fill="currentColor" size={18} />
-                                <span className="ml-1.5 font-bold text-yellow-700">{parseFloat(product.reviews_avg_rating).toFixed(1)}</span>
+                                <span className="ml-1.5 font-bold text-yellow-700">{Number.parseFloat(product.reviews_avg_rating).toFixed(1)}</span>
                                 <span className="ml-2 text-sm text-yellow-600 font-medium">({product.reviews?.length || 0} Ulasan)</span>
                             </div>
                         ) : (
@@ -135,6 +141,7 @@ export default function ProductDetail() {
 
                     <div className="mt-auto pt-6">
                         <button 
+                            type="button"
                             onClick={addToCart}
                             disabled={adding || product.stock === 0}
                             className={`w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-lg text-white shadow-lg transition-all ${
@@ -142,7 +149,7 @@ export default function ProductDetail() {
                             }`}
                         >
                             <ShoppingCart size={24} />
-                            {product.stock === 0 ? 'Stok Habis' : adding ? 'Menambahkan...' : 'Tambah ke Keranjang'}
+                            {getButtonText()}
                         </button>
                     </div>
                 </div>
@@ -162,8 +169,8 @@ export default function ProductDetail() {
                                     <div>
                                         <p className="font-bold text-gray-800">{review.user?.name}</p>
                                         <div className="flex text-yellow-400">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star key={i} size={14} className={i < review.rating ? 'fill-current' : 'text-gray-200'} />
+                                            {[...new Array(5)].map((_, i) => (
+                                                <Star key={`star-${review.id}-${i}`} size={14} className={i < review.rating ? 'fill-current' : 'text-gray-200'} />
                                             ))}
                                         </div>
                                     </div>

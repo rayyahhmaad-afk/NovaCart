@@ -31,33 +31,26 @@ class ReviewController extends Controller
 
         $user = $request->user();
 
-        // 1. Check if order belongs to user and is completed (diterima)
         $order = Order::where('id', $request->order_id)
                       ->where('user_id', $user->id)
                       ->first();
                       
+        $errorMessage = null;
+        $errorCode = 403;
+
         if (!$order) {
-            return response()->json(['message' => 'Order not found or not yours'], 404);
+            $errorMessage = 'Order not found or not yours';
+            $errorCode = 404;
+        } elseif ($order->status !== 'completed') {
+            $errorMessage = 'Order must be completed to leave a review';
+        } elseif (!$order->items()->where('product_id', $request->product_id)->exists()) {
+            $errorMessage = 'Product not found in this order';
+        } elseif (Review::where('order_id', $request->order_id)->where('product_id', $request->product_id)->where('user_id', $user->id)->exists()) {
+            $errorMessage = 'You have already reviewed this product for this order';
         }
 
-        if ($order->status !== 'completed') {
-            return response()->json(['message' => 'Order must be completed to leave a review'], 403);
-        }
-
-        // 2. Check if product is actually in this order
-        $productInOrder = $order->items()->where('product_id', $request->product_id)->exists();
-        if (!$productInOrder) {
-            return response()->json(['message' => 'Product not found in this order'], 403);
-        }
-
-        // 3. Check if user already reviewed this product for this specific order
-        $existingReview = Review::where('order_id', $request->order_id)
-                                ->where('product_id', $request->product_id)
-                                ->where('user_id', $user->id)
-                                ->first();
-                                
-        if ($existingReview) {
-            return response()->json(['message' => 'You have already reviewed this product for this order'], 403);
+        if ($errorMessage) {
+            return response()->json(['message' => $errorMessage], $errorCode);
         }
 
         $review = Review::create([

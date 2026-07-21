@@ -12,9 +12,11 @@ use App\Http\Controllers\AdminController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/products', [ProductController::class, 'index']);
-Route::get('/products/{slug}', [ProductController::class, 'show']);
-Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{slug}', [ProductController::class, 'show']);
+    Route::get('/{id}/reviews', [ReviewController::class, 'index']);
+});
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -38,13 +40,17 @@ Route::middleware(['auth:sanctum', \App\Http\Middleware\AdminMiddleware::class])
     Route::get('/orders', [AdminController::class, 'getOrders']);
     Route::put('/orders/{id}/status', [AdminController::class, 'updateOrderStatus']);
     
-    Route::get('/categories', [AdminController::class, 'getCategories']);
-    Route::post('/categories', [AdminController::class, 'storeCategory']);
-    Route::put('/categories/{id}', [AdminController::class, 'updateCategory']);
-    Route::delete('/categories/{id}', [AdminController::class, 'deleteCategory']);
+    Route::prefix('categories')->group(function () {
+        Route::get('/', [AdminController::class, 'getCategories']);
+        Route::post('/', [AdminController::class, 'storeCategory']);
+        Route::put('/{id}', [AdminController::class, 'updateCategory']);
+        Route::delete('/{id}', [AdminController::class, 'deleteCategory']);
+    });
     
-    Route::get('/products', [AdminController::class, 'getProducts']);
-    Route::post('/products', [AdminController::class, 'storeProduct']);
-    Route::put('/products/{id}', [AdminController::class, 'updateProduct']);
-    Route::delete('/products/{id}', [AdminController::class, 'deleteProduct']);
+    Route::prefix('products')->group(function () {
+        Route::get('/', [AdminController::class, 'getProducts']);
+        Route::post('/', [AdminController::class, 'storeProduct']);
+        Route::put('/{id}', [AdminController::class, 'updateProduct']);
+        Route::delete('/{id}', [AdminController::class, 'deleteProduct']);
+    });
 });

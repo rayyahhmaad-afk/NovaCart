@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
+
 import { Package, Star, MessageSquare } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -63,6 +63,12 @@ export default function OrderHistory() {
         );
     }
 
+    const getStatusStyle = (status) => {
+        if (status === 'completed') return 'bg-green-50 text-green-600 border border-green-100';
+        if (status === 'cancelled') return 'bg-red-50 text-red-600 border border-red-100';
+        return 'bg-blue-50 text-blue-600 border border-blue-100';
+    };
+
     return (
         <div className="max-w-4xl mx-auto px-6 py-12">
             <h1 className="text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
@@ -86,11 +92,7 @@ export default function OrderHistory() {
                                     <p className="text-xs text-gray-400">{new Date(order.created_at).toLocaleDateString('id-ID')}</p>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                    <span className={`px-4 py-2 rounded-xl text-sm font-bold capitalize ${
-                                        order.status === 'completed' ? 'bg-green-50 text-green-600 border border-green-100' :
-                                        order.status === 'cancelled' ? 'bg-red-50 text-red-600 border border-red-100' :
-                                        'bg-blue-50 text-blue-600 border border-blue-100'
-                                    }`}>
+                                    <span className={`px-4 py-2 rounded-xl text-sm font-bold capitalize ${getStatusStyle(order.status)}`}>
                                         {order.status === 'completed' ? 'Diterima' : order.status}
                                     </span>
                                 </div>
@@ -114,12 +116,13 @@ export default function OrderHistory() {
                                                     <Link to={`/product/${item.product.slug}`} className="font-bold text-gray-800 hover:text-red-600 transition">
                                                         {item.product.name}
                                                     </Link>
-                                                    <p className="text-sm text-gray-500 mt-1">{item.quantity} x Rp {parseInt(item.price).toLocaleString('id-ID')}</p>
+                                                    <p className="text-sm text-gray-500 mt-1">{item.quantity} x Rp {Number.parseInt(item.price, 10).toLocaleString('id-ID')}</p>
                                                 </div>
                                             </div>
 
                                             {order.status === 'completed' && !hasReviewed && (
                                                 <button
+                                                    type="button"
                                                     onClick={() => setReviewModal({ open: true, orderId: order.id, productId: item.product_id, product: item.product })}
                                                     className="px-4 py-2 bg-white border-2 border-red-100 text-red-600 rounded-xl text-sm font-bold hover:bg-red-50 hover:border-red-200 transition"
                                                 >
@@ -138,7 +141,7 @@ export default function OrderHistory() {
 
                             <div className="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center">
                                 <span className="font-bold text-gray-600">Total Harga:</span>
-                                <span className="text-xl font-black text-red-600">Rp {parseInt(order.total_price).toLocaleString('id-ID')}</span>
+                                <span className="text-xl font-black text-red-600">Rp {Number.parseInt(order.total_price, 10).toLocaleString('id-ID')}</span>
                             </div>
                         </div>
                     ))}
@@ -149,6 +152,7 @@ export default function OrderHistory() {
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                     <div className="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl relative animate-in fade-in zoom-in duration-200">
                         <button 
+                            type="button"
                             aria-label="Tutup modal ulasan"
                             onClick={() => setReviewModal({ open: false, orderId: null, productId: null, product: null })}
                             className="absolute top-6 right-6 text-gray-400 hover:text-gray-600"

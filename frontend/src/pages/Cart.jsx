@@ -80,11 +80,11 @@ export default function Cart() {
                                 </div>
                                 <div className="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end mt-4 sm:mt-0 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-100">
                                     <div className="flex items-center border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
-                                        <button aria-label="Kurangi kuantitas" onClick={() => updateQuantity(item.id, item.quantity, -1)} className="p-3 hover:bg-gray-200 text-gray-600 transition active:bg-gray-300"><Minus size={18}/></button>
+                                        <button type="button" aria-label="Kurangi kuantitas" onClick={() => updateQuantity(item.id, item.quantity, -1)} className="p-3 hover:bg-gray-200 text-gray-600 transition active:bg-gray-300"><Minus size={18}/></button>
                                         <span aria-live="polite" className="w-12 text-center font-bold text-gray-800">{item.quantity}</span>
-                                        <button aria-label="Tambah kuantitas" onClick={() => updateQuantity(item.id, item.quantity, 1)} className="p-3 hover:bg-gray-200 text-gray-600 transition active:bg-gray-300"><Plus size={18}/></button>
+                                        <button type="button" aria-label="Tambah kuantitas" onClick={() => updateQuantity(item.id, item.quantity, 1)} className="p-3 hover:bg-gray-200 text-gray-600 transition active:bg-gray-300"><Plus size={18}/></button>
                                     </div>
-                                    <button aria-label="Hapus item dari keranjang" onClick={() => removeItem(item.id)} className="p-3 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition" title="Hapus">
+                                    <button type="button" aria-label="Hapus item dari keranjang" onClick={() => removeItem(item.id)} className="p-3 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition" title="Hapus">
                                         <Trash2 size={24} />
                                     </button>
                                 </div>
@@ -101,6 +101,7 @@ export default function Cart() {
                                 <span className="text-2xl font-black text-gray-900 tracking-tight">Rp {new Intl.NumberFormat('id-ID').format(subtotal)}</span>
                             </div>
                             <button 
+                                type="button"
                                 onClick={() => navigate('/checkout')}
                                 className="w-full bg-red-600 text-white font-bold py-4 rounded-2xl hover:bg-red-700 hover:shadow-xl hover:shadow-red-200 transition-all active:scale-95 text-lg"
                             >

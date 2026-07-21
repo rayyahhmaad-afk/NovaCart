@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext, useMemo } from 'react';
 import api from '../services/api';
 
 const AuthContext = createContext();
@@ -24,9 +24,24 @@ export const AuthProvider = ({ children }) => {
     }, [token]);
 
     const login = (userData, userToken) => {
-        setToken(userToken);
-        setUser(userData);
-        localStorage.setItem('token', userToken);
+        if (typeof userToken === 'string') {
+            // Validate & sanitize token (allow alphanumeric, dashes, underscores, dots, and pipes for Sanctum)
+            const sanitizedToken = userToken.replace(/[^a-zA-Z0-9\-_\.\|]/g, '');
+            setToken(sanitizedToken);
+            localStorage.setItem('token', sanitizedToken);
+        }
+        
+        // Sanitize user payload to only store required fields
+        if (userData && typeof userData === 'object') {
+            setUser({
+                id: userData.id,
+                name: userData.name,
+                email: userData.email,
+                role: userData.role
+            });
+        } else {
+            setUser(userData);
+        }
     };
 
     const logout = async () => {
@@ -41,8 +56,10 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const value = useMemo(() => ({ user, token, login, logout, loading }), [user, token, loading]);
+
     return (
-        <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );

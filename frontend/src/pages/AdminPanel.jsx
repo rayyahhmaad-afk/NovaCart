@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, ShoppingBag, ListOrdered, FolderOpen, Save, Trash2, Edit } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, ListOrdered, FolderOpen, Trash2, Edit } from 'lucide-react';
 
 export default function AdminPanel() {
     const { user } = useAuth();
@@ -16,7 +16,7 @@ export default function AdminPanel() {
     });
 
     useEffect(() => {
-        if (user && user.role === 'admin') fetchData(activeTab);
+        if (user?.role === 'admin') fetchData(activeTab);
     }, [activeTab, user]);
 
     const fetchData = async (tab) => {
@@ -32,7 +32,7 @@ export default function AdminPanel() {
         }
     };
 
-    if (!user || user.role !== 'admin') {
+    if (user?.role !== 'admin') {
         return <Navigate to="/" />;
     }
 
@@ -61,6 +61,7 @@ export default function AdminPanel() {
                         { id: 'categories', label: 'Kategori', icon: <FolderOpen size={20}/> }
                     ].map(tab => (
                         <button
+                            type="button"
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
                             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition ${activeTab === tab.id ? 'bg-red-50 text-red-600' : 'text-gray-600 hover:bg-gray-100'}`}
@@ -91,7 +92,7 @@ function DashboardView({ data }) {
                 </div>
                 <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
                     <h3 className="text-gray-500 font-bold mb-2">Total Pendapatan</h3>
-                    <p className="text-4xl font-black text-green-600">Rp {parseInt(data.total_revenue || 0).toLocaleString('id-ID')}</p>
+                    <p className="text-4xl font-black text-green-600">Rp {Number.parseInt(data.total_revenue || 0, 10).toLocaleString('id-ID')}</p>
                 </div>
             </div>
             <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
@@ -115,7 +116,7 @@ function OrdersView({ orders, api, refresh }) {
         try {
             await api.put(`/orders/${id}/status`, { status });
             refresh();
-        } catch (e) { alert('Gagal update status'); }
+        } catch (e) { console.error(e); alert('Gagal update status'); }
     };
     return (
         <div>
@@ -137,7 +138,7 @@ function OrdersView({ orders, api, refresh }) {
                             <tr key={o.id} className="border-b border-gray-100">
                                 <td className="p-4">#{o.id}</td>
                                 <td className="p-4 font-medium">{o.user?.name}</td>
-                                <td className="p-4 text-red-600 font-bold">Rp {parseInt(o.total_price).toLocaleString('id-ID')}</td>
+                                <td className="p-4 text-red-600 font-bold">Rp {Number.parseInt(o.total_price, 10).toLocaleString('id-ID')}</td>
                                 <td className="p-4 text-sm max-w-xs truncate">{o.shipping_address}</td>
                                 <td className="p-4">
                                     <span className="px-2 py-1 bg-gray-100 rounded text-xs font-bold uppercase">{o.status}</span>
@@ -178,12 +179,12 @@ function CategoriesView({ categories, api, refresh }) {
             setForm({ name: '', slug: '' });
             setEditingId(null);
             refresh();
-        } catch (err) { alert('Gagal menyimpan kategori'); }
+        } catch (err) { console.error(err); alert('Gagal menyimpan kategori'); }
     };
 
     const remove = async (id) => {
         if (!confirm('Yakin hapus?')) return;
-        try { await api.delete(`/categories/${id}`); refresh(); } catch(e) { alert('Gagal hapus'); }
+        try { await api.delete(`/categories/${id}`); refresh(); } catch(e) { console.error(e); alert('Gagal hapus'); }
     };
 
     return (
@@ -211,8 +212,8 @@ function CategoriesView({ categories, api, refresh }) {
                                 <td className="p-4 font-bold">{c.name}</td>
                                 <td className="p-4">{c.slug}</td>
                                 <td className="p-4 flex gap-2">
-                                    <button aria-label="Edit Kategori" onClick={() => {setForm({name: c.name, slug: c.slug}); setEditingId(c.id);}} className="text-blue-500"><Edit size={18}/></button>
-                                    <button aria-label="Hapus Kategori" onClick={() => remove(c.id)} className="text-red-500"><Trash2 size={18}/></button>
+                                    <button type="button" aria-label="Edit Kategori" onClick={() => {setForm({name: c.name, slug: c.slug}); setEditingId(c.id);}} className="text-blue-500"><Edit size={18}/></button>
+                                    <button type="button" aria-label="Hapus Kategori" onClick={() => remove(c.id)} className="text-red-500"><Trash2 size={18}/></button>
                                 </td>
                             </tr>
                         ))}
@@ -238,12 +239,12 @@ function ProductsView({ products, categories, api, refresh, fetchCategories }) {
             setForm({ name: '', slug: '', category_id: '', price: '', stock: '', description: '' });
             setEditingId(null);
             refresh();
-        } catch (err) { alert('Gagal menyimpan produk'); }
+        } catch (err) { console.error(err); alert('Gagal menyimpan produk'); }
     };
 
     const remove = async (id) => {
         if (!confirm('Yakin hapus?')) return;
-        try { await api.delete(`/products/${id}`); refresh(); } catch(e) { alert('Gagal hapus'); }
+        try { await api.delete(`/products/${id}`); refresh(); } catch(e) { console.error(e); alert('Gagal hapus'); }
     };
 
     return (
@@ -291,11 +292,11 @@ function ProductsView({ products, categories, api, refresh, fetchCategories }) {
                             <tr key={p.id} className="border-b">
                                 <td className="p-4 font-bold text-sm max-w-[200px] truncate">{p.name}</td>
                                 <td className="p-4 text-sm">{p.category?.name}</td>
-                                <td className="p-4 text-red-600 font-bold">Rp {parseInt(p.price).toLocaleString('id-ID')}</td>
+                                <td className="p-4 text-red-600 font-bold">Rp {Number.parseInt(p.price, 10).toLocaleString('id-ID')}</td>
                                 <td className="p-4">{p.stock}</td>
                                 <td className="p-4 flex gap-2">
-                                    <button aria-label="Edit Produk" onClick={() => {setForm({name: p.name, slug: p.slug, category_id: p.category_id, price: p.price, stock: p.stock, description: p.description}); setEditingId(p.id);}} className="text-blue-500"><Edit size={18}/></button>
-                                    <button aria-label="Hapus Produk" onClick={() => remove(p.id)} className="text-red-500"><Trash2 size={18}/></button>
+                                    <button type="button" aria-label="Edit Produk" onClick={() => {setForm({name: p.name, slug: p.slug, category_id: p.category_id, price: p.price, stock: p.stock, description: p.description}); setEditingId(p.id);}} className="text-blue-500"><Edit size={18}/></button>
+                                    <button type="button" aria-label="Hapus Produk" onClick={() => remove(p.id)} className="text-red-500"><Trash2 size={18}/></button>
                                 </td>
                             </tr>
                         ))}

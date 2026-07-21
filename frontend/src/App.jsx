@@ -32,7 +32,7 @@ function Navbar() {
                             <Link to="/orders" className="text-gray-800 font-bold flex items-center gap-2 bg-gray-50 hover:bg-gray-100 transition px-3 py-1.5 rounded-lg border border-gray-100">
                                 <User size={18} className="text-gray-500"/> {user.name}
                             </Link>
-                            <button onClick={logout} className="text-sm bg-red-50 hover:bg-red-100 text-red-600 font-bold p-2.5 rounded-xl transition shadow-sm" title="Logout">
+                            <button type="button" onClick={logout} className="text-sm bg-red-50 hover:bg-red-100 text-red-600 font-bold p-2.5 rounded-xl transition shadow-sm" title="Logout">
                                 <LogOut size={18} />
                             </button>
                         </div>

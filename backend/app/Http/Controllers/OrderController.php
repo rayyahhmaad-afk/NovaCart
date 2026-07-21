@@ -40,7 +40,7 @@ class OrderController extends Controller
             // Validate stock and calculate total
             foreach ($cart->items as $item) {
                 if ($item->product->stock < $item->quantity) {
-                    throw new \Exception("Stok untuk produk {$item->product->name} tidak mencukupi.");
+                    throw new \App\Exceptions\OrderProcessingException("Stok untuk produk {$item->product->name} tidak mencukupi.");
                 }
                 $totalPrice += $item->product->price * $item->quantity;
             }
@@ -75,9 +75,12 @@ class OrderController extends Controller
                 'message' => 'Checkout berhasil',
                 'order_id' => $order->id
             ]);
-        } catch (\Exception $e) {
+        } catch (\App\Exceptions\OrderProcessingException $e) {
             DB::rollBack();
             return response()->json(['message' => $e->getMessage()], 400);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Terjadi kesalahan sistem, silakan coba lagi.'], 500);
         }
     }
 }
